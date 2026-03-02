@@ -1,0 +1,59 @@
+services:
+
+  mariadb:
+    image: mariadb:11
+    container_name: bus-mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: bus_booking
+      MYSQL_USER: bususer
+      MYSQL_PASSWORD: buspassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - bus-network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: bus-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - bus-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer:latest
+    container_name: bus-adminer
+    restart: unless-stopped
+    ports:
+      - "8090:8080"
+    networks:
+      - bus-network
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+
+volumes:
+  mariadb_data:
+  redis_data:
+
+networks:
+  bus-network:
+    driver: bridge
