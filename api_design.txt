@@ -1,0 +1,58 @@
+Search trips
+POST /bus-booking/api/v1/trips/search
+
+Request:
+{
+    "departure": "Hanoi",
+    "destination": "Ho Chi Minh",
+    "day": "2022-01-01",
+    "seats": 10,
+    "paging": {
+        "page_index": 1,
+        "page_size": 10
+    }
+}
+Response:
+{
+    "status": "success",
+    "message": "Trips found successfully",
+    "data": [
+        {
+            "id": 1,
+            "departure": "Hanoi",
+            "destination": "Ho Chi Minh",
+            "departure_time": "2022-01-01T12:00:00",
+            "arrival_time": "2022-01-01T12:00:00",
+            "available_seats": 10,
+            "price": 100000
+        }
+    ],
+    "paging": {
+        "page_index": 1,
+        "page_size": 10,
+        "total_pages": 1,
+        "total_records": 1
+    }
+}
+
+Get trip by id
+GET /bus-booking/api/v1/trips/{id}
+Response:
+{
+    "status": "success",
+    "message": "Trip found successfully",
+    "data": {
+        "id": 1,
+        "departure": "Hanoi",
+        "destination": "Ho Chi Minh",
+        "departure_time": "2022-01-01T12:00:00",
+        "arrival_time": "2022-01-01T12:00:00",
+        "total_seats": 10,
+        "total_booked_seats": 0,
+        "booked_seats": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "price": 100000
+    }
+}
+
+
+
