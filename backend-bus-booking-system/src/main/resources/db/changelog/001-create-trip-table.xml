@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-trip-table" author="hoanghiep">
+        <createTable tableName="trip">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="departure" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="destination" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="departure_time" type="TIMESTAMP"/>
+
+            <column name="arrival_time" type="TIMESTAMP"/>
+
+            <column name="created_timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+
+            <column name="last_updated_timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <createIndex tableName="trip" indexName="idx_trip_departure_time">
+            <column name="departure_time" />
+        </createIndex>
+        <!-- Rollback -->
+        <rollback>
+            <dropIndex tableName="trip" indexName="idx_trip_departure_time"/>
+            <dropTable tableName="trip"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="001-create-seat-table" author="hoanghiep">
+
+        <createTable tableName="seat">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="price" type="INT"/>
+
+            <column name="total_seat" type="INT"/>
+
+            <column name="total_booked_seats" type="INT"/>
+
+            <column name="booked_seats" type="INT"/>
+
+            <column name="trip_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+
+            <column name="last_updated_timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+
+        </createTable>
+
+        <!-- Foreign key seat.trip_id -> trip.id -->
+        <addForeignKeyConstraint
+                constraintName="fk_seat_trip"
+                baseTableName="seat"
+                baseColumnNames="trip_id"
+                referencedTableName="trip"
+                referencedColumnNames="id"
+                onDelete="CASCADE"/>
+
+        <createIndex tableName="seat" indexName="idx_seat_trip_id">
+            <column name="trip_id"/>
+        </createIndex>
+        <!-- Rollback -->
+        <rollback>
+            <dropIndex tableName="seat" indexName="idx_seat_trip_id"/>
+            <dropForeignKeyConstraint
+                    baseTableName="seat"
+                    constraintName="fk_seat_trip"/>
+            <dropTable tableName="seat"/>
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>
