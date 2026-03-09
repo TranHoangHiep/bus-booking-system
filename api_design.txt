@@ -30,7 +30,6 @@ Response:
     "paging": {
         "page_index": 1,
         "page_size": 10,
-        "total_pages": 1,
         "total_records": 1
     }
 }

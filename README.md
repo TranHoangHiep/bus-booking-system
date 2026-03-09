@@ -147,3 +147,73 @@ Adminer is a lightweight web interface to manage the MariaDB database.
 | Database | `bus_booking` |
 
 > **Tip:** Use `root` / `rootpassword` as username/password if you need full admin access.
+
+---
+
+## 🖥️ Frontend (React + Vite)
+
+Frontend nằm trong thư mục `frontend-bus-booking-system/`, được xây dựng bằng **React** và **Vite**.
+
+### Prerequisites
+
+- **Node.js** >= 18 ([https://nodejs.org](https://nodejs.org))
+- **npm** >= 9 (đi kèm với Node.js)
+
+Kiểm tra version đã cài:
+
+```bash
+node -v
+npm -v
+```
+
+### Cài đặt dependencies
+
+```bash
+cd frontend-bus-booking-system
+npm install
+```
+
+### Chạy Development Server
+
+```bash
+cd frontend-bus-booking-system
+npm run dev
+```
+
+Mở trình duyệt tại: [http://localhost:5173](http://localhost:5173)
+
+> **⚠️ Lưu ý:** Backend Spring Boot phải đang chạy tại `http://localhost:8080` trước khi sử dụng tính năng search. Vite đã được cấu hình proxy tự động forward các request `/bus-booking/*` tới backend.
+
+### Build Production
+
+```bash
+cd frontend-bus-booking-system
+npm run build
+```
+
+File build sẽ được tạo trong thư mục `dist/`.
+
+### Preview Production Build
+
+```bash
+cd frontend-bus-booking-system
+npm run preview
+```
+
+### Cấu trúc thư mục
+
+```
+frontend-bus-booking-system/
+├── index.html                  # Entry HTML
+├── vite.config.js              # Vite config + proxy backend
+├── package.json
+└── src/
+    ├── main.jsx                # React entry point
+    ├── App.jsx                 # Main app (state + API)
+    ├── index.css               # Design system (dark theme)
+    └── components/
+        ├── SearchForm.jsx      # Form tìm kiếm chuyến xe
+        ├── TripResults.jsx     # Hiển thị kết quả + loading
+        └── Pagination.jsx      # Phân trang
+```
+
