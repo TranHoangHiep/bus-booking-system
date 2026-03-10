@@ -50,9 +50,7 @@
 
             <column name="total_seat" type="INT"/>
 
-            <column name="total_booked_seats" type="INT"/>
-
-            <column name="booked_seats" type="INT"/>
+            <column name="booked_seats" type="VARCHAR(255)"/>
 
             <column name="trip_id" type="BIGINT">
                 <constraints nullable="false"/>

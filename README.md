@@ -1,4 +1,5 @@
 # bus-booking-system
+
 The Bus Booking System
 
 ## Functional Requirements
@@ -8,6 +9,7 @@ The Bus Booking System
 **Description:** Users can search for available trips by specifying a travel date and the number of seats required.
 
 **Acceptance Criteria:**
+
 - The system provides a search form with at minimum the following fields:
   - Travel date (required)
   - Number of seats needed (required, minimum 1)
@@ -21,17 +23,18 @@ The Bus Booking System
 **Description:** Users can view all trips in the system, including both available and fully booked trips.
 
 **Acceptance Criteria:**
+
 - Each trip entry displays the following information:
 
-  | Field | Description |
-  |---|---|
-  | Origin | Departure point |
-  | Destination | Arrival point |
-  | Date & Time | Scheduled departure date and time |
-  | Total Seats | Total number of seats on the vehicle |
-  | Available Seats | Number of seats not yet booked |
-  | Booked Seats | Number of seats already reserved |
-  | Seat Numbers | Individual seat identifiers (e.g., A1, A2, B1…) |
+  | Field           | Description                                     |
+  | --------------- | ----------------------------------------------- |
+  | Origin          | Departure point                                 |
+  | Destination     | Arrival point                                   |
+  | Date & Time     | Scheduled departure date and time               |
+  | Total Seats     | Total number of seats on the vehicle            |
+  | Available Seats | Number of seats not yet booked                  |
+  | Booked Seats    | Number of seats already reserved                |
+  | Seat Numbers    | Individual seat identifiers (e.g., A1, A2, B1…) |
 
 - Fully booked trips are still displayed but are visually distinguished (e.g., labeled "Sold Out").
 - Available seats and unavailable seats are clearly differentiated in the seat map.
@@ -43,6 +46,7 @@ The Bus Booking System
 **Description:** Users can select one or more available seats for a trip.
 
 **Acceptance Criteria:**
+
 - The system displays a visual seat map for each trip.
 - Only available seats can be selected.
 - When a user selects a seat:
@@ -58,6 +62,7 @@ The Bus Booking System
 **Description:** Users can pay for their selected seats to finalize the booking.
 
 **Acceptance Criteria:**
+
 - A payment screen is presented after seat selection, showing:
   - Selected seat numbers
   - Total amount to be paid
@@ -72,6 +77,7 @@ The Bus Booking System
 **Description:** The system provides feedback to the user after a booking attempt.
 
 **Acceptance Criteria:**
+
 - **On success:**
   - The system records the booking and marks the selected seats as booked.
   - A success notification is displayed to the user, including:
@@ -97,11 +103,12 @@ The `docker/` folder contains a `docker-compose.yml` that spins up the infrastru
 
 ### Services
 
-| Service | Image | Port | Description |
-|---|---|---|---|
-| `mariadb` | `mariadb:11` | `3306` | Primary database |
-| `redis` | `redis:7-alpine` | `6379` | Cache store |
-| `adminer` | `adminer:latest` | `8090` | Web-based DB admin UI |
+| Service           | Image                                   | Port   | Description                   |
+| ----------------- | --------------------------------------- | ------ | ----------------------------- |
+| `mariadb`         | `mariadb:11`                            | `3306` | Primary database              |
+| `redis`           | `redis:7-alpine`                        | `6379` | Cache store                   |
+| `adminer`         | `adminer:latest`                        | `8090` | Web-based DB admin UI         |
+| `redis-commander` | `rediscommander/redis-commander:latest` | `8091` | Web-based Redis management UI |
 
 ### Prerequisites
 
@@ -138,15 +145,46 @@ Adminer is a lightweight web interface to manage the MariaDB database.
 
 **Login credentials:**
 
-| Field | Value |
-|---|---|
-| System | `MySQL` |
-| Server | `mariadb` |
-| Username | `bususer` |
+| Field    | Value         |
+| -------- | ------------- |
+| System   | `MySQL`       |
+| Server   | `mariadb`     |
+| Username | `bususer`     |
 | Password | `buspassword` |
 | Database | `bus_booking` |
 
 > **Tip:** Use `root` / `rootpassword` as username/password if you need full admin access.
+
+---
+
+## 🔴 Using Redis Commander (Redis Management UI)
+
+Redis Commander is a lightweight web interface for browsing, editing, and managing keys in the Redis cache.
+
+**Access URL:** [http://localhost:8091](http://localhost:8091)
+
+> No login credentials required — Redis Commander connects automatically to the `bus-redis` container.
+
+### What you can do with Redis Commander
+
+| Feature                  | Description                                                        |
+| ------------------------ | ------------------------------------------------------------------ |
+| **Browse keys**          | View all Redis keys with their types, TTL, and values              |
+| **Search / filter keys** | Use the search bar to filter keys by pattern (e.g. `session:*`)    |
+| **Inspect values**       | Click any key to inspect its value (String, Hash, List, Set, ZSet) |
+| **Edit values**          | Update a key's value directly from the UI                          |
+| **Delete keys**          | Remove individual keys or flush entire databases                   |
+| **Monitor TTL**          | See the remaining time-to-live for expiring keys                   |
+| **Add new keys**         | Create new keys of any Redis data type                             |
+
+### Common use-cases
+
+- **Debug session/token data** — inspect session keys your Spring Boot backend stores in Redis.
+- **Check cache hits** — verify that cached responses/objects are stored correctly.
+- **Manually expire a key** — set TTL to `1` to force a key to expire immediately during testing.
+- **Flush all data** — use the "Flush DB" button to wipe Redis state between test runs.
+
+> **Tip:** To flush only one database (default is `db0`), click the database name in the left sidebar and use the **"Flush"** button.
 
 ---
 
@@ -216,4 +254,3 @@ frontend-bus-booking-system/
         ├── TripResults.jsx     # Hiển thị kết quả + loading
         └── Pagination.jsx      # Phân trang
 ```
-

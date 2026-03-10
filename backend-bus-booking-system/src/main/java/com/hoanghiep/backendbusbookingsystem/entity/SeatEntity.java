@@ -26,11 +26,8 @@ public class SeatEntity {
     @Column(name = "total_seat")
     private Integer totalSeat;
 
-    @Column(name = "total_booked_seats")
-    private Integer totalBookedSeats;
-
     @Column(name = "booked_seats")
-    private Integer bookedSeats;
+    private String bookedSeats;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id", nullable = false, foreignKey = @ForeignKey(name = "fk_seat_trip"))

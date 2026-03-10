@@ -37,6 +37,20 @@ services:
       timeout: 5s
       retries: 5
 
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: bus-redis-commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: "local:bus-redis:6379"
+    ports:
+      - "8091:8081"
+    networks:
+      - bus-network
+    depends_on:
+      redis:
+        condition: service_healthy
+
   adminer:
     image: adminer:latest
     container_name: bus-adminer
