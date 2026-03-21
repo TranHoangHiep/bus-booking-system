@@ -18,11 +18,15 @@ function formatPrice(price) {
     }).format(price);
 }
 
-function TripCard({ trip, index }) {
+function TripCard({ trip, index, onTripClick }) {
     return (
         <div
             className="trip-card glass-card fade-in-up"
             style={{ animationDelay: `${index * 0.08}s` }}
+            onClick={() => onTripClick(trip)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter') onTripClick(trip); }}
         >
             <div className="trip-card__route">
                 <div className="trip-card__cities">
@@ -59,7 +63,7 @@ function SkeletonLoader() {
     );
 }
 
-export default function TripResults({ trips, loading, searched }) {
+export default function TripResults({ trips, loading, searched, onTripClick }) {
     if (loading) {
         return (
             <div className="results-section">
@@ -92,9 +96,10 @@ export default function TripResults({ trips, loading, searched }) {
             </div>
             <div className="results-grid">
                 {trips.map((trip, index) => (
-                    <TripCard key={trip.id} trip={trip} index={index} />
+                    <TripCard key={trip.id} trip={trip} index={index} onTripClick={onTripClick} />
                 ))}
             </div>
         </div>
     );
 }
+

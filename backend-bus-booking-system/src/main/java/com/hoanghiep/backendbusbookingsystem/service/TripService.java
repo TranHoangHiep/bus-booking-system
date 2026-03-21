@@ -2,9 +2,11 @@ package com.hoanghiep.backendbusbookingsystem.service;
 
 import com.hoanghiep.backendbusbookingsystem.controller.request.TripSearchRequest;
 import com.hoanghiep.backendbusbookingsystem.controller.response.PageResponse;
+import com.hoanghiep.backendbusbookingsystem.controller.response.SeatResponse;
 import com.hoanghiep.backendbusbookingsystem.controller.response.TripSearchResponse;
 import com.hoanghiep.backendbusbookingsystem.entity.TripEntity;
 import com.hoanghiep.backendbusbookingsystem.entity.TripEntity_;
+import com.hoanghiep.backendbusbookingsystem.repository.SeatRepository;
 import com.hoanghiep.backendbusbookingsystem.repository.TripRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,8 @@ import java.util.List;
 public class TripService {
 
     private final TripRepository tripRepository;
+
+    private final SeatRepository seatRepository;
 
     public PageResponse<List<TripSearchResponse>> searchTrip(TripSearchRequest tripSearchRequest) {
         Specification<TripEntity> specification = toSpecification(tripSearchRequest);
@@ -41,6 +45,18 @@ public class TripService {
         pageResponse.setData(tripEntityPage.getContent().stream().map(TripSearchResponse::from).toList());
 
         return pageResponse;
+    }
+
+    public SeatResponse getSeatByTripId(Long tripId) {
+        var seatEntity = seatRepository.findByTripId(tripId);
+        return SeatResponse.builder()
+                .id(seatEntity.getId())
+                .price(seatEntity.getPrice())
+                .totalSeat(seatEntity.getTotalSeat())
+                .bookedSeats(seatEntity.getBookedSeats())
+                .createdTimestamp(seatEntity.getCreatedTimestamp())
+                .lastUpdatedTimestamp(seatEntity.getLastUpdatedTimestamp())
+                .build();
     }
 
     private Specification<TripEntity> toSpecification(TripSearchRequest request) {

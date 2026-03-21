@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import SearchForm from './components/SearchForm';
 import TripResults from './components/TripResults';
 import Pagination from './components/Pagination';
+import SeatMap from './components/SeatMap';
 import './index.css';
 
 const PAGE_SIZE = 10;
@@ -13,6 +14,12 @@ export default function App() {
   const [error, setError] = useState(null);
   const [searched, setSearched] = useState(false);
   const [lastSearch, setLastSearch] = useState(null);
+
+  // Seat map state
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [seatData, setSeatData] = useState(null);
+  const [seatLoading, setSeatLoading] = useState(false);
+  const [seatError, setSeatError] = useState(null);
 
   const fetchTrips = useCallback(async (searchParams, pageIndex = 0) => {
     setLoading(true);
@@ -64,6 +71,32 @@ export default function App() {
     }
   };
 
+  const handleTripClick = async (trip) => {
+    setSelectedTrip(trip);
+    setSeatData(null);
+    setSeatError(null);
+    setSeatLoading(true);
+
+    try {
+      const res = await fetch(`/bus-booking/api/v1/trips/${trip.id}/seats`);
+      if (!res.ok) {
+        throw new Error(`Lỗi ${res.status}: ${res.statusText}`);
+      }
+      const data = await res.json();
+      setSeatData(data);
+    } catch (err) {
+      setSeatError(err.message || 'Không thể tải thông tin ghế.');
+    } finally {
+      setSeatLoading(false);
+    }
+  };
+
+  const handleCloseSeatMap = () => {
+    setSelectedTrip(null);
+    setSeatData(null);
+    setSeatError(null);
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -80,9 +113,24 @@ export default function App() {
         </div>
       )}
 
-      <TripResults trips={trips} loading={loading} searched={searched} />
+      <TripResults
+        trips={trips}
+        loading={loading}
+        searched={searched}
+        onTripClick={handleTripClick}
+      />
 
       <Pagination paging={paging} onPageChange={handlePageChange} />
+
+      {selectedTrip && (
+        <SeatMap
+          trip={selectedTrip}
+          seatData={seatData}
+          loading={seatLoading}
+          error={seatError}
+          onClose={handleCloseSeatMap}
+        />
+      )}
     </div>
   );
 }

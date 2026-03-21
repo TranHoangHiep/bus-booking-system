@@ -2,15 +2,13 @@ package com.hoanghiep.backendbusbookingsystem.controller;
 
 import com.hoanghiep.backendbusbookingsystem.controller.request.TripSearchRequest;
 import com.hoanghiep.backendbusbookingsystem.controller.response.PageResponse;
+import com.hoanghiep.backendbusbookingsystem.controller.response.SeatResponse;
 import com.hoanghiep.backendbusbookingsystem.controller.response.TripSearchResponse;
 import com.hoanghiep.backendbusbookingsystem.service.TripService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,4 +26,11 @@ public class TripController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping(value = "/{tripId}/seats", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SeatResponse> getSeatByTripId(@PathVariable Long tripId) {
+        SeatResponse response = tripService.getSeatByTripId(tripId);
+        return ResponseEntity.ok(response);
+    }
+
 }
